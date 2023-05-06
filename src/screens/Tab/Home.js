@@ -5,6 +5,7 @@ import {
   Dimensions,
   Image,
   FlatList,
+  TouchableOpacity,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import Header from '../../common/Header';
@@ -46,7 +47,8 @@ const Home = () => {
         data={products}
         renderItem={({item, index}) => {
           return (
-            <View style={styles.ProductItem}>
+            <TouchableOpacity activeOpacity={1} onPress={()=>{navigation
+            .navigate('ProductDetail',{data: item})}} style={styles.ProductItem}>
               <Image source={{uri: item.image}} style={styles.ItemImage} />
               <View>
                 <Text style={styles.name}>
@@ -62,7 +64,7 @@ const Home = () => {
                 </Text>
                 <Text style={styles.price}> {'$' + item.price}</Text>
               </View>
-            </View>
+            </TouchableOpacity>
           );
         }}
       />
