@@ -7,19 +7,22 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import Header from '../common/Header';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import Custombutton from '../common/Custombutton';
 import {useDispatch} from 'react-redux';
 import {addItemRowishlist} from '../redux/slices/wishlistSlice';
-import {addItemtoCart} from '../redux/slices/CartSlice';
+import {addItemtoCart, addQtYItemtoCart} from '../redux/slices/CartSlice';
 
 const ProductDetail = () => {
   const navigation = useNavigation();
-  const route = useRoute();
   const dispatch = useDispatch();
-  const {image, title, description, price} = route.params.data;
+  const route = useRoute();
+  const {image, title, description, price, qty} = route.params.data;
+  const [QTYitem, setQTYitem] = useState(1);
+  useEffect(() => {}, [QTYitem]);
+
   return (
     <View style={styles.conatiner}>
       <Header
@@ -34,11 +37,32 @@ const ProductDetail = () => {
         <Image source={{uri: image}} style={styles.banner} />
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.description}>{description}</Text>
-        <View style={{flexDirection: 'row'}}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text style={[styles.price, {color: '#000', marginLeft: 20}]}>
             {'Price:'}
           </Text>
-          <Text style={styles.price}> {' $' + price}</Text>
+          <Text style={styles.price}> {' $' + Math.round(price)}</Text>
+          <View style={[styles.qtyView, {marginLeft: 10}]}>
+            <TouchableOpacity
+              style={styles.btn}
+              onPress={() => {
+                if (QTYitem > 1) {
+                  setQTYitem(QTYitem - 1);
+                }
+              }}>
+              <Text style={{fontSize: 18, fontWeight: '600'}}>-</Text>
+            </TouchableOpacity>
+            <Text style={styles.qtyvalue}>{QTYitem}</Text>
+            <TouchableOpacity
+              style={styles.btn}
+              onPress={() => {
+                if (QTYitem < 10) {
+                  setQTYitem(QTYitem + 1);
+                }
+              }}>
+              <Text style={{fontSize: 18, fontWeight: '600'}}>+</Text>
+            </TouchableOpacity>
+          </View>
         </View>
         <TouchableOpacity
           style={styles.wishlistbtn}
@@ -47,8 +71,10 @@ const ProductDetail = () => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.btn, {backgroundColor: 'orange'}]}
-          onPress={() => dispatch(addItemtoCart(route.params.data))}>
+          style={[styles.btnadd, {backgroundColor: 'orange'}]}
+          onPress={() =>
+            dispatch(addQtYItemtoCart({...route.params.data, qty: QTYitem}))
+          }>
           <Text
             style={{
               color: '#fff',
@@ -59,13 +85,12 @@ const ProductDetail = () => {
             {'Add to Cart'}
           </Text>
         </TouchableOpacity>
-
-        {/* <Custombutton
+        <Custombutton
           bg={'#ff7803'}
           title={'Buy Now'}
           color={'#000'}
           onClick={() => {}}
-        /> */}
+        />
       </ScrollView>
     </View>
   );
@@ -116,12 +141,30 @@ const styles = StyleSheet.create({
     width: 25,
     height: 25,
   },
-  btn: {
+  btnadd: {
     width: Dimensions.get('window').width - 40,
     height: 53,
     justifyContent: 'center',
     alignSelf: 'center',
     borderRadius: 10,
     marginTop: 20,
+  },
+  qtyView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  qtyvalue: {
+    marginLeft: 10,
+    fontSize: 18,
+  },
+  btn: {
+    padding: 5,
+    borderWidth: 0.5,
+    width: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    marginLeft: 10,
   },
 });

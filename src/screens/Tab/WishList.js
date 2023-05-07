@@ -48,7 +48,9 @@ const WishList = () => {
                       ? item.description.substring(0, 30) + '...'
                       : item.description}
                   </Text>
-                  <Text style={styles.price}> {'$' + item.price}</Text>
+                  <Text style={styles.price}>
+                    {'$' + Math.round(item.price).round(item.price)}
+                  </Text>
                 </View>
               </TouchableOpacity>
             );

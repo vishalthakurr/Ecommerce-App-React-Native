@@ -11,7 +11,7 @@ import React, {useState, useEffect} from 'react';
 import Header from '../../common/Header';
 import {useNavigation} from '@react-navigation/native';
 import {addproducts} from '../../redux/slices/ProductSlice';
-import { useDispatch } from 'react-redux';
+import {useDispatch} from 'react-redux';
 const Home = () => {
   const navigation = useNavigation();
   const [products, setproducts] = useState([]);
@@ -26,6 +26,9 @@ const Home = () => {
     const res = await fetch('https://fakestoreapi.com/products');
     let data = await res.json();
     if (data.length !== 0) {
+      data.map(item => {
+        item.qty = 1;
+      });
       setproducts(data);
       dispatch(addproducts(data));
     } else {
@@ -69,7 +72,9 @@ const Home = () => {
                     ? item.description.substring(0, 30) + '...'
                     : item.description}
                 </Text>
-                <Text style={styles.price}> {'$' + item.price}</Text>
+                <Text style={styles.price}>
+                  {'$' + Math.round(item.price)}
+                </Text>
               </View>
             </TouchableOpacity>
           );

@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import React from 'react';
 import {useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
 const {height, width} = Dimensions.get('window');
 const Header = ({
   title,
@@ -17,7 +18,7 @@ const Header = ({
   onClickRightIcon,
 }) => {
   const CartItem = useSelector(state => state.cart);
-  console.log(JSON.stringify(CartItem.cartdata));
+  const navigation = useNavigation();
   return (
     <View style={styles.header}>
       <TouchableOpacity
@@ -28,17 +29,22 @@ const Header = ({
           style={styles.imgleft}></Image>
       </TouchableOpacity>
       <Text style={styles.titlesty}>{title ? title : ''}</Text>
-      <TouchableOpacity style={styles.btn}>
-        <Image
-          source={RightIcon ? RightIcon : null}
-          style={[styles.imgleft, {width: 40, height: 40}]}
-        />
-        {CartItem.cartdata.length != 0 && (
-          <View style={styles.cartIcon}>
-            <Text style={styles.itemvalue}>{CartItem.cartdata.length}</Text>
-          </View>
-        )}
-      </TouchableOpacity>
+      {!CartItem && <View></View>}
+      {CartItem && (
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={() => navigation.navigate('Cart')}>
+          <Image
+            source={RightIcon ? RightIcon : null}
+            style={[styles.imgleft, {width: 40, height: 40}]}
+          />
+          {CartItem.data.length !== 0 && RightIcon ? (
+            <View style={styles.cartIcon}>
+              <Text style={styles.itemvalue}>{CartItem.data.length}</Text>
+            </View>
+          ) : null}
+        </TouchableOpacity>
+      )}
     </View>
   );
 };

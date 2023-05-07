@@ -3,16 +3,59 @@ const {createSlice} = require('@reduxjs/toolkit');
 const CartSlice = createSlice({
   name: 'cart',
   initialState: {
-    cartdata: [],
+    data: [],
   },
   reducers: {
     addItemtoCart(state, action) {
-      let tempData = state.cartdata;
-      tempData.push(action.payload);
-      state.cartdata = tempData;
+      let tempData = state.data;
+      let isitemExist = false;
+      tempData.map(item => {
+        if (item.id === action.payload.id) {
+          isitemExist = true;
+          item.qty = item.qty + 1;
+        }
+      });
+      if (!isitemExist) {
+        tempData.push(action.payload);
+      }
+      state.data = tempData;
+    },
+    reduceQtyFromCart(state, action) {
+      let tempData = state.data;
+      tempData.map(item => {
+        if (item.id === action.payload.id) {
+          item.qty = item.qty - 1;
+        }
+      });
+
+      state.data = tempData;
+    },
+    removeItemFromCart(state, action) {
+      let tempData = state.data;
+      tempData.splice(action.payload, 1);
+      state.data = tempData;
+    },
+    addQtYItemtoCart(state, action) {
+      let tempData = state.data;
+      let isitemExist = false;
+      tempData.map(item => {
+        if (item.id === action.payload.id) {
+          isitemExist = true;
+          item.qty = item.qty + action.payload.qty;
+        }
+      });
+      if (!isitemExist) {
+        tempData.push(action.payload);
+      }
+      state.data = tempData;
     },
   },
 });
 
-export const {addItemtoCart} = CartSlice.actions;
+export const {
+  addItemtoCart,
+  reduceQtyFromCart,
+  removeItemFromCart,
+  addQtYItemtoCart,
+} = CartSlice.actions;
 export default CartSlice.reducer;
