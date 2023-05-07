@@ -30,7 +30,7 @@ const CartSlice = createSlice({
 
       state.data = tempData;
     },
-    removeItemFromCart(state, action) {
+    deleteItemFromCart(state, action) {
       let tempData = state.data;
       tempData.splice(action.payload, 1);
       state.data = tempData;
@@ -55,7 +55,7 @@ const CartSlice = createSlice({
 export const {
   addItemtoCart,
   reduceQtyFromCart,
-  removeItemFromCart,
+  deleteItemFromCart,
   addQtYItemtoCart,
 } = CartSlice.actions;
 export default CartSlice.reducer;

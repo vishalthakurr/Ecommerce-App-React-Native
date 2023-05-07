@@ -23,19 +23,20 @@ const WishList = () => {
     <View View style={styles.conatiner}>
       <Header title={'WishList '} />
       {/* wishlist list */}
-      {Wishlistproducts.length !== 0 && (
+      {Wishlistproducts.length !== 0 ? (
         <FlatList
           style={styles.ListProduct}
           data={Wishlistproducts}
           renderItem={({item, index}) => {
             return (
-              <TouchableOpacity
-                activeOpacity={1}
-                onPress={() => {
-                  navigation.navigate('ProductDetail', {data: item});
-                }}
-                style={styles.ProductItem}>
-                <Image source={{uri: item.image}} style={styles.ItemImage} />
+              <View style={styles.ProductItem}>
+                <TouchableOpacity
+                  activeOpacity={1}
+                  onPress={() => {
+                    navigation.navigate('ProductDetail', {data: item});
+                  }}>
+                  <Image source={{uri: item.image}} style={styles.ItemImage} />
+                </TouchableOpacity>
                 <View>
                   <Text style={styles.name}>
                     {item.title.length > 25
@@ -48,14 +49,36 @@ const WishList = () => {
                       ? item.description.substring(0, 30) + '...'
                       : item.description}
                   </Text>
-                  <Text style={styles.price}>
-                    {'$' + Math.round(item.price).round(item.price)}
-                  </Text>
+                  <View style={{flexDirection:'row', alignItems:'center' ,justifyContent:'space-between',padding:8}}>
+                    <Text style={styles.price}>
+                      {'$' + Math.round(item.price)}
+                    </Text>
+                    <TouchableOpacity
+                      style={styles.wishlistbtn}
+                      onPress={() =>
+                        dispatch(addItemRowishlist(route.params.data))
+                      }>
+                      <Image
+                        source={require('../../img/wishlistfillred.png')}
+                        style={styles.Icon}
+                      />
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              </TouchableOpacity>
+              </View>
             );
           }}
         />
+      ) : (
+        <Text
+          style={{
+            textAlign: 'center',
+            marginTop: 40,
+            fontSize: 20,
+            fontWeight: '400',
+          }}>
+          No item in wishlist
+        </Text>
       )}
     </View>
   );
@@ -69,7 +92,7 @@ const styles = StyleSheet.create({
   ListProduct: {marginBottom: 60},
   ProductItem: {
     width: Dimensions.get('window').width,
-    height: 100,
+    height: 120,
     backgroundColor: '#fff',
     flexDirection: 'row',
     margin: 8,
@@ -95,5 +118,17 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     color: 'green',
     marginTop: 5,
+  },
+  wishlistbtn: {
+    backgroundColor: '#E2DFDF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 35,
+    height: 35,
+    borderRadius: 25,
+  },
+  Icon: {
+    width: 25,
+    height: 25,
   },
 });

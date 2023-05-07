@@ -15,14 +15,18 @@ import {useNavigation} from '@react-navigation/native';
 
 const Search = () => {
   const navigation = useNavigation();
-  const products = useSelector(state => state);
+  const products = useSelector(state => state.product);
   const [search, setsearch] = useState('');
-  const [searchlist, setsearchlist] = useState(products.product.data);
+  const [searchlist, setsearchlist] = useState([]);
   const filterdata = txt => {
-    let newdata = products.product.data.filter(item => {
-      return item.title.toLowerCase().match(txt.toLowerCase());
-    });
-    setsearchlist(newdata);
+    if (txt.length !== 0 && search.length !== 0) {
+      let newdata = products.data.filter(item => {
+        return item.title.toLowerCase().match(txt.toLowerCase());
+      });
+      setsearchlist(newdata);
+    } else {
+      setsearchlist([]);
+    }
   };
   return (
     <View style={styles.conatiner}>
@@ -56,10 +60,12 @@ const Search = () => {
             />
           </TouchableOpacity>
         )}
+      </View>
 
+      {searchlist.length !== 0 ? (
         <FlatList
-          data={searchlist}
           style={styles.ListProduct}
+          data={searchlist}
           renderItem={({item, index}) => {
             return (
               <TouchableOpacity
@@ -89,7 +95,18 @@ const Search = () => {
             );
           }}
         />
-      </View>
+      ) : (
+        <Text
+          style={{
+            textAlign: 'center',
+           marginTop:40,
+           fontSize:20,
+           fontWeight:'400'
+
+          }}>
+          No Search found
+        </Text>
+      )}
     </View>
   );
 };

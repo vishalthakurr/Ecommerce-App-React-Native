@@ -11,7 +11,7 @@ import React, {useState, useEffect} from 'react';
 import Header from '../common/Header';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import Custombutton from '../common/Custombutton';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {addItemRowishlist} from '../redux/slices/wishlistSlice';
 import {addItemtoCart, addQtYItemtoCart} from '../redux/slices/CartSlice';
 
@@ -19,8 +19,14 @@ const ProductDetail = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const route = useRoute();
-  const {image, title, description, price, qty} = route.params.data;
+  const {image, title, description, price, id} = route.params.data;
   const [QTYitem, setQTYitem] = useState(1);
+  const whistlist = useSelector(state => state.wishlist.data);
+  const whistlistcheck = () => {
+    whistlist.map(item => {
+      return item.id == id ? 'wishlist' : 'wishlistfillred';
+    });
+  };
   useEffect(() => {}, [QTYitem]);
 
   return (
@@ -64,6 +70,7 @@ const ProductDetail = () => {
             </TouchableOpacity>
           </View>
         </View>
+
         <TouchableOpacity
           style={styles.wishlistbtn}
           onPress={() => dispatch(addItemRowishlist(route.params.data))}>

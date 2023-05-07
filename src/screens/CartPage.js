@@ -14,7 +14,7 @@ import Header from '../common/Header';
 import {
   addItemtoCart,
   reduceQtyFromCart,
-  removeItemtoCart,
+  deleteItemFromCart,
 } from '../redux/slices/CartSlice';
 
 const CartPage = () => {
@@ -30,20 +30,20 @@ const CartPage = () => {
     <View View style={styles.conatiner}>
       <Header title={'Cart Iteam '} />
       {/* Cart Iteam list */}
-      {cartItem.length !== 0 && (
+      {cartItem.length !== 0 ? (
         <FlatList
           style={styles.ListProduct}
           data={cartItem}
-          renderItem={({item}) => {
+          renderItem={({item, index}) => {
             return (
-              <TouchableOpacity
-                activeOpacity={1}
-                onLongPress={() => {
-                  navigation.navigate('ProductDetail', {data: item});
-                }}
-                delayLongPress={100}
-                style={styles.ProductItem}>
-                <Image source={{uri: item.image}} style={styles.ItemImage} />
+              <View style={styles.ProductItem}>
+                <TouchableOpacity
+                  activeOpacity={1}
+                  onPress={() => {
+                    navigation.navigate('ProductDetail', {data: item});
+                  }}>
+                  <Image source={{uri: item.image}} style={styles.ItemImage} />
+                </TouchableOpacity>
                 <View>
                   <Text style={styles.name}>
                     {item.title.length > 25
@@ -62,13 +62,11 @@ const CartPage = () => {
                     </Text>
                     <TouchableOpacity
                       style={styles.btn}
-                      onPress={() => {
-                        if (item.qty > 1) {
-                          dispatch(reduceQtyFromCart(item));
-                        } else {
-                          dispatch(removeItemtoCart(item.qty - 1));
-                        }
-                      }}>
+                      onPress={() =>
+                        item.qty > 1
+                          ? dispatch(reduceQtyFromCart(item))
+                          : dispatch(deleteItemFromCart(index))
+                      }>
                       <Text style={{fontSize: 18, fontWeight: '600'}}>-</Text>
                     </TouchableOpacity>
                     <Text style={styles.qtyvalue}>{item.qty}</Text>
@@ -79,10 +77,20 @@ const CartPage = () => {
                     </TouchableOpacity>
                   </View>
                 </View>
-              </TouchableOpacity>
+              </View>
             );
           }}
         />
+      ) : (
+        <Text
+          style={{
+            textAlign: 'center',
+            marginTop: 40,
+            fontSize: 20,
+            fontWeight: '400',
+          }}>
+          No item in cart
+        </Text>
       )}
     </View>
   );
