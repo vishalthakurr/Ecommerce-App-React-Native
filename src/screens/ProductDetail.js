@@ -1,13 +1,24 @@
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  Dimensions,
+} from 'react-native';
 import React from 'react';
 import Header from '../common/Header';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import Custombutton from '../common/Custombutton';
-import {ScrollView} from 'react-native-gesture-handler';
+import {useDispatch} from 'react-redux';
+import {addItemRowishlist} from '../redux/slices/wishlistSlice';
+import {addItemtoCart} from '../redux/slices/CartSlice';
 
 const ProductDetail = () => {
   const navigation = useNavigation();
   const route = useRoute();
+  const dispatch = useDispatch();
   const {image, title, description, price} = route.params.data;
   return (
     <View style={styles.conatiner}>
@@ -29,21 +40,32 @@ const ProductDetail = () => {
           </Text>
           <Text style={styles.price}> {' $' + price}</Text>
         </View>
-        <TouchableOpacity style={styles.wishlistbtn} onPress={() => {}}>
+        <TouchableOpacity
+          style={styles.wishlistbtn}
+          onPress={() => dispatch(addItemRowishlist(route.params.data))}>
           <Image source={require('../img/wishlist.png')} style={styles.Icon} />
         </TouchableOpacity>
-        <Custombutton
-          bg={'orange'}
-          title={'Add to Cart'}
-          color={'#fff'}
-          onClick={() => {}}
-        />
-        <Custombutton
+
+        <TouchableOpacity
+          style={[styles.btn, {backgroundColor: 'orange'}]}
+          onPress={() => dispatch(addItemtoCart(route.params.data))}>
+          <Text
+            style={{
+              color: '#fff',
+              textAlign: 'center',
+              fontSize: 25,
+              fontWeight: '400',
+            }}>
+            {'Add to Cart'}
+          </Text>
+        </TouchableOpacity>
+
+        {/* <Custombutton
           bg={'#ff7803'}
           title={'Buy Now'}
           color={'#000'}
           onClick={() => {}}
-        />
+        /> */}
       </ScrollView>
     </View>
   );
@@ -93,5 +115,13 @@ const styles = StyleSheet.create({
   Icon: {
     width: 25,
     height: 25,
+  },
+  btn: {
+    width: Dimensions.get('window').width - 40,
+    height: 53,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    borderRadius: 10,
+    marginTop: 20,
   },
 });
