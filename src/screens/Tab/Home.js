@@ -10,11 +10,16 @@ import {
 import React, {useState, useEffect} from 'react';
 import Header from '../../common/Header';
 import {useNavigation} from '@react-navigation/native';
-
+import {addproducts} from '../../redux/slices/ProductSlice';
+import { useDispatch } from 'react-redux';
 const Home = () => {
   const navigation = useNavigation();
   const [products, setproducts] = useState([]);
 
+  const dispatch = useDispatch();
+  useEffect(() => {
+    getproduct();
+  }, []);
 
   //*api call get product
   const getproduct = async () => {
@@ -22,13 +27,11 @@ const Home = () => {
     let data = await res.json();
     if (data.length !== 0) {
       setproducts(data);
+      dispatch(addproducts(data));
     } else {
       // Something went wrong
     }
   };
-  useEffect(() => {
-    getproduct();
-  }, []);
 
   return (
     <View View style={styles.conatiner}>
@@ -47,12 +50,16 @@ const Home = () => {
         data={products}
         renderItem={({item, index}) => {
           return (
-            <TouchableOpacity activeOpacity={1} onPress={()=>{navigation
-            .navigate('ProductDetail',{data: item})}} style={styles.ProductItem}>
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => {
+                navigation.navigate('ProductDetail', {data: item});
+              }}
+              style={styles.ProductItem}>
               <Image source={{uri: item.image}} style={styles.ItemImage} />
               <View>
                 <Text style={styles.name}>
-                  {item.title.length >25
+                  {item.title.length > 25
                     ? item.title.substring(0, 25) + '...'
                     : item.title}
                 </Text>

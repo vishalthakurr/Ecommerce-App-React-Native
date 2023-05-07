@@ -1,5 +1,11 @@
-import {View, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import React, {useState} from 'react';
+import {
+  View,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Keyboard,
+} from 'react-native';
+import React, {useState, useEffect} from 'react';
 import Home from './Tab/Home';
 import Search from './Tab/Search';
 import WishList from './Tab/WishList';
@@ -8,7 +14,27 @@ import Notification from './Tab/Notification';
 
 const HomeScreen = () => {
   const [selectTab, setselectTab] = useState(0);
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true);
+      },
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false);
+      },
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
   return (
     <View style={styles.conatiner}>
       {selectTab == 0 ? (
@@ -22,60 +48,61 @@ const HomeScreen = () => {
       ) : (
         <User />
       )}
-
-      <View style={styles.bottomNav}>
-        <TouchableOpacity
-          style={styles.bottomtab}
-          onPress={() => setselectTab(0)}>
-          <Image
-            source={
-              selectTab == 0
-                ? require('../img/homeFill.png')
-                : require('../img/home.png')
-            }
-            style={styles.bottomIcon}></Image>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.bottomtab}
-          onPress={() => setselectTab(1)}>
-          <Image
-            source={require('../img/search.png')}
-            style={styles.bottomIcon}></Image>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.bottomtab}
-          onPress={() => setselectTab(2)}>
-          <Image
-            source={
-              selectTab == 2
-                ? require('../img/wishlistFill.png')
-                : require('../img/wishlist.png')
-            }
-            style={styles.bottomIcon}></Image>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.bottomtab}
-          onPress={() => setselectTab(3)}>
-          <Image
-            source={
-              selectTab == 3
-                ? require('../img/notiFill.png')
-                : require('../img/noti.png')
-            }
-            style={styles.bottomIcon}></Image>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.bottomtab}
-          onPress={() => setselectTab(4)}>
-          <Image
-            source={
-              selectTab == 4
-                ? require('../img/userFill.png')
-                : require('../img/user.png')
-            }
-            style={styles.bottomIcon}></Image>
-        </TouchableOpacity>
-      </View>
+      {!isKeyboardVisible && (
+        <View style={styles.bottomNav}>
+          <TouchableOpacity
+            style={styles.bottomtab}
+            onPress={() => setselectTab(0)}>
+            <Image
+              source={
+                selectTab == 0
+                  ? require('../img/homeFill.png')
+                  : require('../img/home.png')
+              }
+              style={styles.bottomIcon}></Image>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.bottomtab}
+            onPress={() => setselectTab(1)}>
+            <Image
+              source={require('../img/search.png')}
+              style={styles.bottomIcon}></Image>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.bottomtab}
+            onPress={() => setselectTab(2)}>
+            <Image
+              source={
+                selectTab == 2
+                  ? require('../img/wishlistFill.png')
+                  : require('../img/wishlist.png')
+              }
+              style={styles.bottomIcon}></Image>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.bottomtab}
+            onPress={() => setselectTab(3)}>
+            <Image
+              source={
+                selectTab == 3
+                  ? require('../img/notiFill.png')
+                  : require('../img/noti.png')
+              }
+              style={styles.bottomIcon}></Image>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.bottomtab}
+            onPress={() => setselectTab(4)}>
+            <Image
+              source={
+                selectTab == 4
+                  ? require('../img/userFill.png')
+                  : require('../img/user.png')
+              }
+              style={styles.bottomIcon}></Image>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 };

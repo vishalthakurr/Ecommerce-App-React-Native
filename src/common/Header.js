@@ -17,13 +17,17 @@ const Header = ({
 }) => {
   return (
     <View style={styles.header}>
-      <TouchableOpacity style={styles.btn} onPress={() => OnClickLeftIcon()}>
-        <Image source={leftIcon} style={styles.imgleft}></Image>
+      <TouchableOpacity
+        style={styles.btn}
+        onPress={() => (!OnClickLeftIcon ? '' : OnClickLeftIcon())}>
+        <Image
+          source={leftIcon ? leftIcon : null}
+          style={styles.imgleft}></Image>
       </TouchableOpacity>
-      <Text style={styles.titlesty}>{title}</Text>
+      <Text style={styles.titlesty}>{title ? title : ''}</Text>
       <TouchableOpacity style={styles.btn}>
         <Image
-          source={RightIcon}
+          source={RightIcon ? RightIcon : null}
           style={[styles.imgleft, {width: 40, height: 40}]}></Image>
       </TouchableOpacity>
     </View>
