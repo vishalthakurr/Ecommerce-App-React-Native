@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Dimensions,
+  Alert,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import Header from '../common/Header';
@@ -14,6 +15,8 @@ import Custombutton from '../common/Custombutton';
 import {useDispatch, useSelector} from 'react-redux';
 import {addItemRowishlist} from '../redux/slices/wishlistSlice';
 import {addItemtoCart, addQtYItemtoCart} from '../redux/slices/CartSlice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import UserLogin from '../common/UserLogin';
 
 const ProductDetail = () => {
   const navigation = useNavigation();
@@ -21,14 +24,20 @@ const ProductDetail = () => {
   const route = useRoute();
   const {image, title, description, price, id} = route.params.data;
   const [QTYitem, setQTYitem] = useState(1);
-  const whistlist = useSelector(state => state.wishlist.data);
-  const whistlistcheck = () => {
-    whistlist.map(item => {
-      return item.id == id ? 'wishlist' : 'wishlistfillred';
-    });
-  };
-  useEffect(() => {}, [QTYitem]);
+  const [modelShow, setmodelShow] = useState(false);
 
+  const userStatus = async () => {
+    let isuserlogin = false;
+    const status = await AsyncStorage.getItem('is_User_login');
+    if (status === null) {
+      // Alert.alert('Please login');
+      setmodelShow(true);
+      isuserlogin = false;
+    } else {
+      isuserlogin = true;
+    }
+    return isuserlogin;
+  };
   return (
     <View style={styles.conatiner}>
       <Header
@@ -73,15 +82,21 @@ const ProductDetail = () => {
 
         <TouchableOpacity
           style={styles.wishlistbtn}
-          onPress={() => dispatch(addItemRowishlist(route.params.data))}>
+          onPress={() => {
+            if (userStatus()) {
+              dispatch(addItemRowishlist(route.params.data));
+            }
+          }}>
           <Image source={require('../img/wishlist.png')} style={styles.Icon} />
         </TouchableOpacity>
 
         <TouchableOpacity
           style={[styles.btnadd, {backgroundColor: 'orange'}]}
-          onPress={() =>
-            dispatch(addQtYItemtoCart({...route.params.data, qty: QTYitem}))
-          }>
+          onPress={() => {
+            if (userStatus()) {
+              dispatch(addQtYItemtoCart({...route.params.data, qty: QTYitem}));
+            }
+          }}>
           <Text
             style={{
               color: '#fff',
@@ -99,6 +114,12 @@ const ProductDetail = () => {
           onClick={() => {}}
         />
       </ScrollView>
+      <UserLogin
+        modeVisibale={modelShow}
+        onClickLogin={() => setmodelShow(false)}
+        onClickSignup={() => setmodelShow(false)}
+        onClose={() => setmodelShow(false)}
+      />
     </View>
   );
 };
