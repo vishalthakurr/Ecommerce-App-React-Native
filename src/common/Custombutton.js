@@ -1,6 +1,5 @@
-import {Text, StyleSheet, Dimensions} from 'react-native';
+import {Text, StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
 import React from 'react';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 
 const Custombutton = ({bg, title, color, onClick}) => {
   return (

@@ -30,8 +30,6 @@ const ProductDetail = () => {
     let isuserlogin = false;
     const status = await AsyncStorage.getItem('is_User_login');
     if (status === null) {
-      // Alert.alert('Please login');
-      setmodelShow(true);
       isuserlogin = false;
     } else {
       isuserlogin = true;
@@ -83,8 +81,10 @@ const ProductDetail = () => {
         <TouchableOpacity
           style={styles.wishlistbtn}
           onPress={() => {
-            if (userStatus()) {
+            if (userStatus() === true) {
               dispatch(addItemRowishlist(route.params.data));
+            } else {
+              setmodelShow(true);
             }
           }}>
           <Image source={require('../img/wishlist.png')} style={styles.Icon} />
@@ -93,8 +93,10 @@ const ProductDetail = () => {
         <TouchableOpacity
           style={[styles.btnadd, {backgroundColor: 'orange'}]}
           onPress={() => {
-            if (userStatus()) {
+            if (userStatus() === true) {
               dispatch(addQtYItemtoCart({...route.params.data, qty: QTYitem}));
+            } else {
+              setmodelShow(true);
             }
           }}>
           <Text
@@ -116,8 +118,14 @@ const ProductDetail = () => {
       </ScrollView>
       <UserLogin
         modeVisibale={modelShow}
-        onClickLogin={() => setmodelShow(false)}
-        onClickSignup={() => setmodelShow(false)}
+        onClickLogin={() => {
+          setmodelShow(false);
+          navigation.navigate('Login');
+        }}
+        onClickSignup={() => {
+          setmodelShow(false);
+          navigation.navigate('Signup');
+        }}
         onClose={() => setmodelShow(false)}
       />
     </View>

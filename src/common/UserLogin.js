@@ -1,10 +1,9 @@
-import {View, Text, Modal, StyleSheet, Dimensions, Image} from 'react-native';
+import {View, Text, Modal, StyleSheet, Dimensions, Image ,TouchableOpacity} from 'react-native';
 import React from 'react';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 
 const UserLogin = ({modeVisibale, onClickLogin, onClickSignup, onClose}) => {
   return (
-    <Modal visible={modeVisibale} transparent>
+    <Modal visible={modeVisibale} transparent animationType='fade'>
       <View style={styles.modelview}>
         <View style={styles.mainView}>
           <TouchableOpacity style={styles.btn} onPress={() => onClickLogin()}>
@@ -15,10 +14,10 @@ const UserLogin = ({modeVisibale, onClickLogin, onClickSignup, onClose}) => {
             onPress={() => onClickSignup()}>
             <Text style={styles.btntext}>{'Create Account'}</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => onClose()}>
+          <TouchableOpacity onPress={() => onClose()} style={styles.crosIcon}>
             <Image
               source={require('../img/clear.png')}
-              style={{width: 24, height: 24}}
+              style={styles.clearbtn}
             />
           </TouchableOpacity>
         </View>
@@ -58,7 +57,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   clearbtn: {
-    width: 24,
-    height: 24,
+    width: 18,
+    height: 18,
   },
+  crosIcon:{
+    position:'absolute',
+    top:10,
+    right:10
+  }
 });
