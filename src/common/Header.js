@@ -29,11 +29,12 @@ const Header = ({
           style={styles.imgleft}></Image>
       </TouchableOpacity>
       <Text style={styles.titlesty}>{title ? title : ''}</Text>
-      {!CartItem && <View></View>}
-      {CartItem && (
+      {!CartItem ? (
+        <View></View>
+      ) : (
         <TouchableOpacity
           style={styles.btn}
-          onPress={() => navigation.navigate('Cart')}>
+          onPress={() => (!CartItem ? '' : navigation.navigate('Cart'))}>
           <Image
             source={RightIcon ? RightIcon : null}
             style={[styles.imgleft, {width: 40, height: 40}]}

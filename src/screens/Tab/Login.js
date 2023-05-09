@@ -1,21 +1,52 @@
-import {View, Text, TextInput, StyleSheet} from 'react-native';
-import React from 'react';
+import {View, Text, TextInput, StyleSheet, Alert} from 'react-native';
+import React, {useState} from 'react';
 import Custombutton from '../../common/Custombutton';
 import {useNavigation} from '@react-navigation/native';
+import firestore from '@react-native-firebase/firestore';
 
 const Login = () => {
   const navigation = useNavigation();
+  const [email, setemail] = useState('');
+  const [password, setpassword] = useState('');
+  const Loginuser = () => {
+    if (email.length !== 0 && password.length !== 0) {
+      firestore()
+        .collection('Users')
+        // Filter results
+        .where('email', '==', email)
+        .where('password', '==', password)
+        .get()
+        .then(querySnapshot => {
+          /* ... */
+          console.log(querySnapshot.docs[0]);
+        });
+    } else {
+      Alert.alert('Please give Email or password for login');
+    }
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{'Login'}</Text>
-      <TextInput style={styles.input} placeholder="Enter Email" />
-      <TextInput style={styles.input} placeholder="Enter password" />
+      <TextInput
+        style={styles.input}
+        placeholder="Enter Email"
+        value={email}
+        onChangeText={txt => setemail(txt)}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Enter password"
+        value={password}
+        onChangeText={txt => setpassword(txt)}
+      />
 
       <Custombutton
         bg={'#ff7803'}
         title={'Login'}
         color={'#fff'}
-        onClick={() => {}}
+        onClick={() => {
+          Loginuser();
+        }}
       />
       <Text
         style={styles.loginText}
