@@ -4,6 +4,7 @@ import React from 'react';
 const Custombutton = ({bg, title, color, onClick}) => {
   return (
     <TouchableOpacity
+      disabled={onClick ? false : true}
       style={[styles.btn, {backgroundColor: bg}]}
       onPress={() => onClick()}>
       <Text
@@ -28,5 +29,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 10,
     marginTop: 20,
+    marginBottom: 10,
   },
 });

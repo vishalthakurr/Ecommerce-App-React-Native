@@ -14,11 +14,10 @@ const Login = () => {
         .collection('Users')
         // Filter results
         .where('email', '==', email)
-        .where('password', '==', password)
         .get()
         .then(querySnapshot => {
           /* ... */
-          console.log(querySnapshot.docs[0]);
+          console.log(querySnapshot.docs[0]._data);
         });
     } else {
       Alert.alert('Please give Email or password for login');

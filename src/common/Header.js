@@ -22,21 +22,21 @@ const Header = ({
   return (
     <View style={styles.header}>
       <TouchableOpacity
+        disabled={leftIcon ? false : true}
         style={styles.btn}
         onPress={() => (!OnClickLeftIcon ? '' : OnClickLeftIcon())}>
-        <Image
-          source={leftIcon ? leftIcon : null}
-          style={styles.imgleft}></Image>
+        <Image source={leftIcon} style={styles.imgleft}></Image>
       </TouchableOpacity>
       <Text style={styles.titlesty}>{title ? title : ''}</Text>
       {!CartItem ? (
         <View></View>
       ) : (
         <TouchableOpacity
+          disabled={RightIcon ? false : true}
           style={styles.btn}
           onPress={() => (!CartItem ? '' : navigation.navigate('Cart'))}>
           <Image
-            source={RightIcon ? RightIcon : null}
+            source={RightIcon}
             style={[styles.imgleft, {width: 40, height: 40}]}
           />
           {CartItem.data.length !== 0 && RightIcon ? (

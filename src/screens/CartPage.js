@@ -16,6 +16,7 @@ import {
   reduceQtyFromCart,
   deleteItemFromCart,
 } from '../redux/slices/CartSlice';
+import CheckOutLayout from '../common/CheckOutLayout';
 
 const CartPage = () => {
   const Cart = useSelector(state => state.cart);
@@ -26,6 +27,13 @@ const CartPage = () => {
     setcartItem(Cart.data ? Cart.data : []);
   }, [Cart]);
 
+  const getTotal = () => {
+    let total = 0;
+    cartItem.map(item => {
+      total += item.qty * item.price;
+    });
+    return total.toFixed(0);
+  };
   return (
     <View View style={styles.conatiner}>
       <Header title={'Cart Iteam '} />
@@ -91,6 +99,9 @@ const CartPage = () => {
           }}>
           No item in cart
         </Text>
+      )}
+      {cartItem.length > 0 && (
+        <CheckOutLayout items={cartItem.length} total={getTotal()} />
       )}
     </View>
   );

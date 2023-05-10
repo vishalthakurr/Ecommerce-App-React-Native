@@ -81,11 +81,11 @@ const ProductDetail = () => {
         <TouchableOpacity
           style={styles.wishlistbtn}
           onPress={() => {
-            if (userStatus() === true) {
-              dispatch(addItemRowishlist(route.params.data));
-            } else {
-              setmodelShow(true);
-            }
+            // if (userStatus() === true) {
+            dispatch(addItemRowishlist(route.params.data));
+            // } else {
+            // setmodelShow(true);
+            // }
           }}>
           <Image source={require('../img/wishlist.png')} style={styles.Icon} />
         </TouchableOpacity>
@@ -93,11 +93,11 @@ const ProductDetail = () => {
         <TouchableOpacity
           style={[styles.btnadd, {backgroundColor: 'orange'}]}
           onPress={() => {
-            if (userStatus() === true) {
-              dispatch(addQtYItemtoCart({...route.params.data, qty: QTYitem}));
-            } else {
-              setmodelShow(true);
-            }
+            // if (userStatus() === true) {
+            dispatch(addQtYItemtoCart({...route.params.data, qty: QTYitem}));
+            // } else {
+            //   setmodelShow(true);
+            // }
           }}>
           <Text
             style={{
@@ -113,10 +113,13 @@ const ProductDetail = () => {
           bg={'#ff7803'}
           title={'Buy Now'}
           color={'#000'}
-          onClick={() => {}}
+          onClick={() => {
+            dispatch(addQtYItemtoCart({...route.params.data, qty: QTYitem}));
+            navigation.navigate('Checkout');
+          }}
         />
       </ScrollView>
-      <UserLogin
+      {/* <UserLogin
         modeVisibale={modelShow}
         onClickLogin={() => {
           setmodelShow(false);
@@ -127,7 +130,7 @@ const ProductDetail = () => {
           navigation.navigate('Signup');
         }}
         onClose={() => setmodelShow(false)}
-      />
+      /> */}
     </View>
   );
 };
