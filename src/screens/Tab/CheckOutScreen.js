@@ -167,7 +167,17 @@ const CheckOutScreen = () => {
         />
         <Text style={styles.paymentMethodText}>Cash on Delivery</Text>
       </TouchableOpacity>
-      <Text style={styles.title}>Address</Text>
+      <View style={styles.addresView}>
+        <Text style={styles.title}>Address</Text>
+        <Text
+          style={[
+            styles.title,
+            {textDecorationLine: 'underline', color: '#0269A0FB'},
+          ]}
+          onPress={() => navigation.navigate('Address')}>
+          Edit Address
+        </Text>
+      </View>
       <Text
         style={[styles.title, {marginTop: 10, fontSize: 16, color: '#636363'}]}>
         {selectAddress}
@@ -188,7 +198,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginTop: 10,
     color: '#000',
-    marginBottom:10
+    marginBottom: 10,
   },
   ProductItem: {
     width: Dimensions.get('window').width,
@@ -261,5 +271,12 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     fontSize: 16,
     color: '#000',
+  },
+  addresView: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingRight: 10,
   },
 });
