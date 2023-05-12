@@ -49,6 +49,9 @@ const CartSlice = createSlice({
       }
       state.data = tempData;
     },
+    emptycart(state, action) {
+      state.data = action.payload;
+    },
   },
 });
 
@@ -57,5 +60,6 @@ export const {
   reduceQtyFromCart,
   deleteItemFromCart,
   addQtYItemtoCart,
+  emptycart,
 } = CartSlice.actions;
 export default CartSlice.reducer;

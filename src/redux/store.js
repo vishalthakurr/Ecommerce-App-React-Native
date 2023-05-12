@@ -4,12 +4,14 @@ import ProductSlice from './slices/ProductSlice';
 import wishlistSlice from './slices/wishlistSlice';
 import CartSlice from './slices/CartSlice';
 import AddAddesssSlice from './slices/AddAddesssSlice';
+import OrderSlice from './slices/OrderSlice';
 const store = configureStore({
   reducer: {
     product: ProductSlice,
     wishlist: wishlistSlice,
     cart: CartSlice,
     address: AddAddesssSlice,
+    order: OrderSlice,
   },
 });
 

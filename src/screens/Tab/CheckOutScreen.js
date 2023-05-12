@@ -14,10 +14,13 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
   addItemtoCart,
   deleteItemFromCart,
+  emptycart,
   reduceQtyFromCart,
 } from '../../redux/slices/CartSlice';
 import Custombutton from '../../common/Custombutton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import RazorpayCheckout from 'react-native-razorpay';
+import {orderitem} from '../../redux/slices/OrderSlice';
 
 const CheckOutScreen = () => {
   const navigation = useNavigation();
@@ -45,6 +48,20 @@ const CheckOutScreen = () => {
   }, [isfocused]);
   const getSelectedadddress = async () => {
     setselectAddress(await AsyncStorage.getItem('My_address'));
+  };
+  const orderplace = async paymentid => {
+    const data = {
+      items: cartItem,
+      amount: '$' + getTotal(),
+      addresView: selectAddress,
+      paymentId: paymentid,
+      paymentStatus: paymentSelect === 3 ? 'Pending' : 'Success',
+      orderdate: new Date().getTime()
+    };
+
+    dispatch(orderitem(data));
+    dispatch(emptycart([]));
+    navigation.navigate('OrderSuccess');
   };
   return (
     <View style={styles.container}>
@@ -190,7 +207,37 @@ const CheckOutScreen = () => {
         style={[styles.title, {marginTop: 10, fontSize: 16, color: '#636363'}]}>
         {selectAddress}
       </Text>
-      <Custombutton bg={'green'} title={'Pay & Order'} color={'#fff'} />
+      <Custombutton
+        bg={'green'}
+        title={'Pay & Order'}
+        color={'#fff'}
+        onClick={() => {
+          var options = {
+            description: 'Credits towards consultation',
+            image: 'https://i.imgur.com/3g7nmJC.png',
+            currency: 'USD',
+            key: 'rzp_test_qwZCtB5Z78rBFj', // Your api key
+            amount: getTotal() * 100,
+            name: 'Payment',
+            prefill: {
+              email: 'void@razorpay.com',
+              contact: '9191919191',
+              name: 'Razorpay Software',
+            },
+            theme: {color: '#3E8BFF'},
+          };
+          RazorpayCheckout.open(options)
+            .then(data => {
+              // handle success
+              // alert(`Success: ${data.razorpay_payment_id}`);
+              orderplace(data.razorpay_payment_id);
+            })
+            .catch(error => {
+              // handle failure
+              alert(`Error: ${error.code} | ${error.description}`);
+            });
+        }}
+      />
     </View>
   );
 };
