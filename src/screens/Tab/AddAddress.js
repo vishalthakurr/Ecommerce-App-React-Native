@@ -1,18 +1,28 @@
 import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import React, {useState} from 'react';
 import Header from '../../common/Header';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {TextInput} from 'react-native-gesture-handler';
 import Custombutton from '../../common/Custombutton';
 import {useDispatch} from 'react-redux';
-import {addAddress} from '../../redux/slices/AddAddesssSlice';
+import {addAddress, updateAddress} from '../../redux/slices/AddAddesssSlice';
+import uuid from 'react-native-uuid';
 
 const AddAddress = () => {
+  const route = useRoute();
   const navigation = useNavigation();
-  const [type, settype] = useState(1);
-  const [state, setstate] = useState('');
-  const [city, setcity] = useState('');
-  const [pincode, setpincode] = useState('');
+  const [type, settype] = useState(
+    route.params.type === 'new' ? 1 : route.params.data.type === 'Home' ? 1 : 2,
+  );
+  const [state, setstate] = useState(
+    route.params.type === 'new' ? '' : route.params.data.state,
+  );
+  const [city, setcity] = useState(
+    route.params.type === 'new' ? '' : route.params.data.city,
+  );
+  const [pincode, setpincode] = useState(
+    route.params.type === 'new' ? '' : route.params.data.pincode,
+  );
   const dispatch = useDispatch();
 
   return (
@@ -20,7 +30,9 @@ const AddAddress = () => {
       <Header
         leftIcon={require('../../img/back.png')}
         OnClickLeftIcon={() => navigation.goBack()}
-        title={'Add New Address'}
+        title={` ${
+          route.params.type === 'new' ? 'Add New Address' : 'Edit Address'
+        }`}
       />
       <TextInput
         placeholder="Enter State"
@@ -85,19 +97,33 @@ const AddAddress = () => {
       </View>
       <Custombutton
         bg={'#FE9000'}
-        title={'Save Address'}
-        color={'#fff'}
-        onClick={() =>
-          dispatch(
-            addAddress({
-              state,
-              city,
-              pincode,
-              type: type == 1 ? 'Home' : 'Office',
-            }),
-            navigation.goBack(),
-          )
+        title={
+          route.params.type === 'new' ? 'Save Address' : 'Save edit Address'
         }
+        color={'#fff'}
+        onClick={() => {
+          if (route.params.type === 'new') {
+            dispatch(
+              addAddress({
+                state,
+                city,
+                pincode,
+                type: type == 1 ? 'Home' : 'Office',
+                id: uuid.v4(),
+              }),
+            );
+          } else
+            dispatch(
+              updateAddress({
+                state,
+                city,
+                pincode,
+                type: type == 1 ? 'Home' : 'Office',
+                id: route.params.data.id,
+              }),
+            );
+          navigation.goBack();
+        }}
       />
     </View>
   );

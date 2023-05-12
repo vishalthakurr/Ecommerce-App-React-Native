@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import Header from '../../common/Header';
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   addItemtoCart,
@@ -17,6 +17,7 @@ import {
   reduceQtyFromCart,
 } from '../../redux/slices/CartSlice';
 import Custombutton from '../../common/Custombutton';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CheckOutScreen = () => {
   const navigation = useNavigation();
@@ -26,6 +27,7 @@ const CheckOutScreen = () => {
   const [selectAddress, setselectAddress] = useState(
     'Please Select the Address',
   );
+  const isfocused = useIsFocused();
   const dispatch = useDispatch();
   useEffect(() => {
     setcartItem(Cart.data ? Cart.data : []);
@@ -37,6 +39,12 @@ const CheckOutScreen = () => {
       total += item.qty * item.price;
     });
     return total.toFixed(0);
+  };
+  useEffect(() => {
+    getSelectedadddress();
+  }, [isfocused]);
+  const getSelectedadddress = async () => {
+    setselectAddress(await AsyncStorage.getItem('My_address'));
   };
   return (
     <View style={styles.container}>
